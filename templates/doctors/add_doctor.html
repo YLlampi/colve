@@ -1,0 +1,171 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <div class="container">
+        <h1>{{ titulo }}</h1>
+        <hr>
+        <form method="POST" class="row g-3" enctype="multipart/form-data">
+            {% csrf_token %}
+            {% comment %}
+                <div class="col-md-4">
+                    <label for="inputEmail4" class="form-label">Departamento</label>
+                    {{ form.departamento }}
+                </div>
+                <div class="col-md-4">
+                    <label for="inputEmail4" class="form-label">fecha</label>
+                    {{ form.fecha }}
+                </div>
+            {% endcomment %}
+            <div class="col-md-4">
+                <label for="inputEmail4" class="form-label">DNI / CE</label>
+                {{ form.dni }}
+                {% for error in form.dni.errors %}
+                    <div class="p-1 mb-2 bg-danger text-white">{{ error }}</div>
+                {% endfor %}
+            </div>
+
+
+            <div class="col-md-4">
+                <label for="inputEmail4" class="form-label">Nombres</label>
+                {{ form.nombres }}
+            </div>
+            <div class="col-md-4">
+                <label for="inputEmail4" class="form-label">Apellidos</label>
+                {{ form.apellidos }}
+            </div>
+            {% comment %}
+                <div class="col-md-4">
+                    <label for="inputEmail4" class="form-label">Nacionalidad</label>
+                    {{ form.nacionalidad }}
+                </div>
+                <div class="col-md-4">
+                    <label for="inputEmail4" class="form-label">Fecha de Nacimiento</label>
+                    {{ form.fecha_nacimiento }}
+                </div>
+                <div class="col-md-4">
+                    <label for="inputEmail4" class="form-label">Distrito</label>
+                    {{ form.nacimiento_distrito }}
+                </div>
+                <div class="col-md-4">
+                    <label for="inputEmail4" class="form-label">Provincia</label>
+                    {{ form.nacimiento_provincia }}
+                </div>
+                <div class="col-md-4">
+                    <label for="inputEmail4" class="form-label">Región</label>
+                    {{ form.nacimiento_departamento }}
+                </div>
+                <div class="col-md-4">
+                    <label for="inputEmail4" class="form-label">Estado Civil</label>
+                    {{ form.estado_civil }}
+                </div>
+                <div class="col-md-4">
+                    <label for="inputEmail4" class="form-label">Nombre Cónyuge</label>
+                    {{ form.nombre_conyuge }}
+                </div>
+                <div class="col-md-4">
+                    <label for="inputEmail4" class="form-label">Dirección Actual</label>
+                    {{ form.direccion_actual }}
+                </div>
+                <div class="col-md-4">
+                    <label for="inputEmail4" class="form-label">Distrito</label>
+                    {{ form.direccion_distrito }}
+                </div>
+                <div class="col-md-4">
+                    <label for="inputEmail4" class="form-label">Provincia</label>
+                    {{ form.direccion_provincia }}
+                </div>
+                <div class="col-md-4">
+                    <label for="inputEmail4" class="form-label">Departamento</label>
+                    {{ form.direccion_departamento }}
+                </div>
+                <div class="col-md-4">
+                    <label for="inputEmail4" class="form-label">Teléfono Fijo</label>
+                    {{ form.telefono_fijo }}
+                </div>
+                <div class="col-md-4">
+                    <label for="inputEmail4" class="form-label">Celular</label>
+                    {{ form.celular }}
+                </div>
+                <div class="col-md-4">
+                    <label for="inputEmail4" class="form-label">Operador</label>
+                    {{ form.operador }}
+                </div>
+                <div class="col-md-4">
+                    <label for="inputEmail4" class="form-label">Email (1)</label>
+                    {{ form.email_uno }}
+                </div>
+                <div class="col-md-4">
+                    <label for="inputEmail4" class="form-label">Email (2)</label>
+                    {{ form.email_dos }}
+                </div>
+                <div class="col-md-4">
+                    <label for="inputEmail4" class="form-label">Universidad de Procidencia</label>
+                    {{ form.universidad_procedencia }}
+                </div>
+                <div class="col-md-4">
+                    <label for="inputEmail4" class="form-label">Fecha de Egreso / Bachillerato</label>
+                    {{ form.fecha_egreso_bachiller }}
+                </div>
+                <div class="col-md-4">
+                    <label for="inputEmail4" class="form-label">Fecha de Obtención / Título</label>
+                    {{ form.fecha_obtencion_titulo }}
+                </div>
+                <div class="col-md-4">
+                    <label for="inputEmail4" class="form-label">Especialidad/Post Grado</label>
+                    {{ form.especialidad_postgrado }}
+                </div>
+                <div class="col-md-4">
+                    <label for="inputEmail4" class="form-label">Área de Ejercicio Profesional</label>
+                    {{ form.area_ejercicio }}
+                </div>
+                <div class="col-md-4">
+                    <label for="inputEmail4" class="form-label">Centro Laboral</label>
+                    {{ form.centro_laboral }}
+                </div>
+                <div class="col-md-4">
+                    <label for="inputEmail4" class="form-label">Dirección de Trabajo</label>
+                    {{ form.direccion_trabajo }}
+                </div>
+                <div class="col-md-4">
+                    <label for="inputEmail4" class="form-label">Teléfono</label>
+                    {{ form.telefono_trabajo }}
+                </div>
+                <div class="col-md-4">
+                    <label for="inputEmail4" class="form-label">¿Desea ser MV voluntariado(a) ante desastres?</label>
+                    {{ form.MV_voluntario }}
+                </div>
+
+                <div class="col-md-4">
+                    <label for="inputEmail4" class="form-label">Número de CMVP</label>
+                    {{ form.num_CMVP }}
+                </div>
+                <div class="col-md-4">
+                    <label for="inputEmail4" class="form-label">Fecha de Registro</label>
+                    {{ form.fecha_registro }}
+                </div>
+                <div class="col-md-4">
+                    <label for="inputEmail4" class="form-label">Fecha de Emision</label>
+                    {{ form.fecha_emision }}
+                </div>
+                <div class="col-md-4">
+                    <label for="inputEmail4" class="form-label">Pagado Hasta</label>
+                    {{ form.fecha_pagado }}
+                </div>
+            {% endcomment %}
+
+            <div class="col-md-6 mt-2">
+                <button type="submit" class="btn btn-primary btn-sm btn-block">Enviar</button>
+            </div>
+        </form>
+    </div>
+
+
+{% endblock content %}
+
+
+{% block js %}
+    <script type="text/javascript">
+
+
+    </script>
+{% endblock js %}

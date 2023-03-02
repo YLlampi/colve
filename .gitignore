@@ -1,0 +1,15 @@
+# Django #
+*.log
+*.pot
+*.pyc
+__pycache__
+
+# Backup files #
+*.bak
+veterinary/settings.py
+#/staticfiles
+migrations
+.idea
+mediafiles
+venv/
+db.sqlite3

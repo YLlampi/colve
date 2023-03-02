@@ -1,0 +1,11 @@
+.bg-lazo{ background-color: #ff010b!important; }
+ .font-lazo { font-family: "BankGothic Md BT"!important; font-style: normal; font-weight: 400}
+
+
+ .select2-container--default .select2-selection--multiple .select2-selection__choice {
+    /*background-color: #007bff;*/
+    /*border-color: #006fe6;*/
+    color: #000000 !important;
+    /*padding: 0 10px;*/
+    /*margin-top: .31rem;*/
+}

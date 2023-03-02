@@ -1,0 +1,580 @@
+{% extends 'base.html' %}
+{% load static %}
+
+
+{% block content %}
+
+
+    <div class="container">
+
+        {% if messages %}
+            <div class="alert alert-success" role="alert">
+                {% for message in messages %}
+                    <p{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</p>
+                {% endfor %}
+            </div>
+        {% endif %}
+
+        <div class="main-body">
+            <!-- Breadcrumb -->
+            <nav aria-label="breadcrumb" class="main-breadcrumb">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item"><a href="{% url 'list_doctors' %}">Inicio</a></li>
+                    <li class="breadcrumb-item"><a href="javascript:void(0)">médico</a></li>
+                    <li class="breadcrumb-item active" aria-current="page">{{ doctor.nombres }}</li>
+                </ol>
+            </nav>
+            <!-- /Breadcrumb -->
+
+            <div class="row gutters-sm">
+                <div class="col-md-4 mb-3">
+                    <div class="card">
+                        <div class="card-body">
+                            <div class="d-flex flex-column align-items-center text-center">
+                                <img src="{{ doctor.get_foto_url }}" alt="Admin"
+                                     class="rounded-circle" width="150">
+                                <div class="mt-3">
+                                    <h4>{{ doctor.get_full_name }}</h4>
+                                    <p class="text-secondary mb-1">{{ doctor.dni }}</p>
+                                    <p class="text-muted font-size-sm">{{ doctor.direccion_actual }}, {{ doctor.direccion_departamento }}</p>
+                                    <a href="{% url 'update_doctor' doctor.pk %}" class="btn btn-primary">Actualizar
+                                        Datos</a>
+                                    <a href="https://api.whatsapp.com/send?phone={{ doctor.celular }}&text=Hola%20{{ doctor.nombres }}%2C%20te%20hablamos%20del%20Colegio%20Médico%20Veterinario%20del%20Perú"
+                                       target="_blank"
+                                       class="btn btn-outline-primary">
+                                        Enviar Mensaje
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card mt-3">
+                        <ul class="list-group list-group-flush">
+                            <li class="list-group-item d-flex justify-content-between align-items-center flex-wrap">
+                                <h6 class="mb-0">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                                         fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                         stroke-linejoin="round" class="feather feather-globe mr-2 icon-inline">
+                                        <circle cx="12" cy="12" r="10"></circle>
+                                        <line x1="2" y1="12" x2="22" y2="12"></line>
+                                        <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path>
+                                    </svg>
+                                    Email
+                                </h6>
+                                <span class="text-secondary">{{ doctor.email_uno }}</span>
+                            </li>
+                            {% comment %}
+                                <li class="list-group-item d-flex justify-content-between align-items-center flex-wrap">
+                                    <h6 class="mb-0">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+                                             viewBox="0 0 24 24"
+                                             fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                             stroke-linejoin="round" class="feather feather-github mr-2 icon-inline">
+                                            <path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"></path>
+                                        </svg>
+                                        Github
+                                    </h6>
+                                    <span class="text-secondary">bootdey</span>
+                                </li>
+                                <li class="list-group-item d-flex justify-content-between align-items-center flex-wrap">
+                                    <h6 class="mb-0">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+                                             viewBox="0 0 24 24"
+                                             fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                             stroke-linejoin="round"
+                                             class="feather feather-twitter mr-2 icon-inline text-info">
+                                            <path d="M23 3a10.9 10.9 0 0 1-3.14 1.53 4.48 4.48 0 0 0-7.86 3v1A10.66 10.66 0 0 1 3 4s-4 9 5 13a11.64 11.64 0 0 1-7 2c9 5 20 0 20-11.5a4.5 4.5 0 0 0-.08-.83A7.72 7.72 0 0 0 23 3z"></path>
+                                        </svg>
+                                        Twitter
+                                    </h6>
+                                    <span class="text-secondary">@bootdey</span>
+                                </li>
+                                <li class="list-group-item d-flex justify-content-between align-items-center flex-wrap">
+                                    <h6 class="mb-0">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+                                             viewBox="0 0 24 24"
+                                             fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                             stroke-linejoin="round"
+                                             class="feather feather-instagram mr-2 icon-inline text-danger">
+                                            <rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect>
+                                            <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path>
+                                            <line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line>
+                                        </svg>
+                                        Instagram
+                                    </h6>
+                                    <span class="text-secondary">bootdey</span>
+                                </li>
+                            {% endcomment %}
+                            <li class="list-group-item d-flex justify-content-between align-items-center flex-wrap">
+                                <h6 class="mb-0">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor"
+                                         class="bi bi-telephone mr-2 icon-inline text-dark" viewBox="0 0 16 16">
+                                        <path d="M3.654 1.328a.678.678 0 0 0-1.015-.063L1.605 2.3c-.483.484-.661 1.169-.45 1.77a17.568 17.568 0 0 0 4.168 6.608 17.569 17.569 0 0 0 6.608 4.168c.601.211 1.286.033 1.77-.45l1.034-1.034a.678.678 0 0 0-.063-1.015l-2.307-1.794a.678.678 0 0 0-.58-.122l-2.19.547a1.745 1.745 0 0 1-1.657-.459L5.482 8.062a1.745 1.745 0 0 1-.46-1.657l.548-2.19a.678.678 0 0 0-.122-.58L3.654 1.328zM1.884.511a1.745 1.745 0 0 1 2.612.163L6.29 2.98c.329.423.445.974.315 1.494l-.547 2.19a.678.678 0 0 0 .178.643l2.457 2.457a.678.678 0 0 0 .644.178l2.189-.547a1.745 1.745 0 0 1 1.494.315l2.306 1.794c.829.645.905 1.87.163 2.611l-1.034 1.034c-.74.74-1.846 1.065-2.877.702a18.634 18.634 0 0 1-7.01-4.42 18.634 18.634 0 0 1-4.42-7.009c-.362-1.03-.037-2.137.703-2.877L1.885.511z"/>
+                                    </svg>
+                                    Celular
+                                </h6>
+                                <span class="text-secondary">{{ doctor.celular }}</span>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="col-md-8">
+                    <div class="card mb-3">
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-sm-3">
+                                    <h6 class="mb-0">N° de CMVP</h6>
+                                </div>
+                                <div class="col-sm-9 text-secondary">
+                                    {{ doctor.get_num_CMVP }}
+                                </div>
+                            </div>
+                            <hr>
+                            <div class="row">
+                                <div class="col-sm-3">
+                                    <h6 class="mb-0">Fecha de Registro</h6>
+                                </div>
+                                <div class="col-sm-9 text-secondary">
+                                    {{ doctor.get_fecha_registro }}
+                                </div>
+                            </div>
+                            <hr>
+                            <div class="row">
+                                <div class="col-sm-3">
+                                    <h6 class="mb-0">Fecha de Emisión</h6>
+                                </div>
+                                <div class="col-sm-9 text-secondary">
+                                    {{ doctor.get_fecha_emision }}
+                                </div>
+                            </div>
+                            <hr>
+                            <div class="row">
+                                <div class="col-sm-3">
+                                    <h6 class="mb-0">Fecha de Caducidad</h6>
+                                </div>
+                                <div class="col-sm-9 text-secondary">
+                                    {{ doctor.get_fecha_caducidad }}
+                                </div>
+                            </div>
+                            <hr>
+                            {% if doctor.es_activo %}
+                                <div class="row p-1 m-1 mb-0 bg-success text-dark">
+                            {% else %}
+                                <div class="row p-1 m-1 mb-0 bg-danger">
+                            {% endif %}
+                            <div class="col-sm-3">
+                                <h6 class="mb-0">¿Activo?</h6>
+                            </div>
+                            <div class="col-sm-9 text-secondary text-white">
+                                {{ doctor.get_es_activo }}
+                            </div>
+                            </div>
+                            <hr>
+                            <div class="row">
+                                <div class="col-sm-3">
+                                    <h6 class="mb-0">Última Cuota Pagada</h6>
+                                </div>
+                                <div class="col-sm-9 text-secondary">
+                                    {{ doctor.get_fecha_pagado_mes }}
+                                </div>
+                            </div>
+                            <hr>
+                            <div class="row">
+                                <div class="col-sm-3">
+                                    <h6 class="mb-0">Activo Hasta</h6>
+                                </div>
+                                <div class="col-sm-9 text-secondary">
+                                    {{ doctor.get_fecha_activo_mes }}
+                                </div>
+                            </div>
+                            <hr>
+                            <div class="row flex">
+
+                                {% if doctor.fecha_emision and doctor.fecha_pagado and doctor.num_CMVP %}
+                                    <div class="col-sm-12">
+                                        <a class="btn btn-success "
+                                           href="{% url 'pay_quota' doctor.id %}">Pagar Cuota</a>
+                                    </div>
+                                {% else %}
+                                    <div class="col-sm-12">
+                                        <a class="btn btn-info "
+                                           href="{% url 'update_cmvp' doctor.id %}">Actualizar Datos (CMVP)</a>
+                                    </div>
+                                {% endif %}
+                            </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+
+                <div class="row gutters-sm">
+                    <div class="col-sm-4 mb-3">
+                        <div class="card mb-3">
+                            <div class="card-body">
+                                <div class="row">
+                                    <div class="col-sm-6">
+                                        <h6 class="mb-0">Departamento</h6>
+                                    </div>
+                                    <div class="col-sm-6 text-secondary">
+                                        {{ doctor.departamento }}
+                                    </div>
+                                </div>
+                                <hr>
+                                <div class="row">
+                                    <div class="col-sm-6">
+                                        <h6 class="mb-0">Nacionalidad</h6>
+                                    </div>
+                                    <div class="col-sm-6 text-secondary">
+                                        {{ doctor.nacionalidad }}
+                                    </div>
+                                </div>
+                                <hr>
+                                <div class="row">
+                                    <div class="col-sm-6">
+                                        <h6 class="mb-0">Fecha Nacimiento</h6>
+                                    </div>
+                                    <div class="col-sm-6 text-secondary">
+                                        {{ doctor.fecha_nacimiento }}
+                                    </div>
+                                </div>
+                                <hr>
+                                <div class="row">
+                                    <div class="col-sm-6">
+                                        <h6 class="mb-0">Departamento</h6>
+                                    </div>
+                                    <div class="col-sm-6 text-secondary">
+                                        {{ doctor.nacimiento_departamento }}
+                                    </div>
+                                </div>
+                                <hr>
+                                <div class="row">
+                                    <div class="col-sm-6">
+                                        <h6 class="mb-0">Número de Hijos</h6>
+                                    </div>
+                                    <div class="col-sm-6 text-secondary">
+                                        {{ doctor.num_hijos }}
+                                    </div>
+                                </div>
+                                <hr>
+                                <div class="row">
+                                    <div class="col-sm-6">
+                                        <h6 class="mb-0">Provincia</h6>
+                                    </div>
+                                    <div class="col-sm-6 text-secondary">
+                                        {{ doctor.direccion_provincia }}
+                                    </div>
+                                </div>
+                                <hr>
+                                <div class="row">
+                                    <div class="col-sm-6">
+                                        <h6 class="mb-0">Celular</h6>
+                                    </div>
+                                    <div class="col-sm-6 text-secondary">
+                                        {{ doctor.celular }}
+                                    </div>
+                                </div>
+                                <hr>
+                                <div class="row">
+                                    <div class="col-sm-6">
+                                        <h6 class="mb-0">Email (2)</h6>
+                                    </div>
+                                    <div class="col-sm-6 text-secondary">
+                                        {{ doctor.email_dos }}
+                                    </div>
+                                </div>
+                                <hr>
+                                <div class="row">
+                                    <div class="col-sm-6">
+                                        <h6 class="mb-0">Fecha de Obtencion (Título)</h6>
+                                    </div>
+                                    <div class="col-sm-6 text-secondary">
+                                        {{ doctor.fecha_obtencion_titulo }}
+                                    </div>
+                                </div>
+                                <hr>
+                                <div class="row">
+                                    <div class="col-sm-6">
+                                        <h6 class="mb-0">Centro Laboral</h6>
+                                    </div>
+                                    <div class="col-sm-6 text-secondary">
+                                        {{ doctor.centro_laboral }}
+                                    </div>
+                                </div>
+                                <hr>
+                                <div class="row">
+                                    <div class="col-sm-6">
+                                        <h6 class="mb-0">¿Voluntario ante desastres?</h6>
+                                    </div>
+                                    <div class="col-sm-6 text-secondary">
+                                        {{ doctor.MV_voluntario }}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-4 mb-3">
+                        <div class="card mb-3">
+                            <div class="card-body">
+                                <div class="row">
+                                    <div class="col-sm-6">
+                                        <h6 class="mb-0">Fecha</h6>
+                                    </div>
+                                    <div class="col-sm-6 text-secondary">
+                                        {{ doctor.fecha }}
+                                    </div>
+                                </div>
+                                <hr>
+                                <div class="row">
+                                    <div class="col-sm-6">
+                                        <h6 class="mb-0">Nombres</h6>
+                                    </div>
+                                    <div class="col-sm-6 text-secondary">
+                                        {{ doctor.nombres }}
+                                    </div>
+                                </div>
+                                <hr>
+                                <div class="row">
+                                    <div class="col-sm-6">
+                                        <h6 class="mb-0">Distrito</h6>
+                                    </div>
+                                    <div class="col-sm-6 text-secondary">
+                                        {{ doctor.nacimiento_distrito }}
+                                    </div>
+                                </div>
+                                <hr>
+                                <div class="row">
+                                    <div class="col-sm-6">
+                                        <h6 class="mb-0">Estado Civil</h6>
+                                    </div>
+                                    <div class="col-sm-6 text-secondary">
+                                        {{ doctor.estado_civil }}
+                                    </div>
+                                </div>
+                                <hr>
+                                <div class="row">
+                                    <div class="col-sm-6">
+                                        <h6 class="mb-0">Dirección Actual</h6>
+                                    </div>
+                                    <div class="col-sm-6 text-secondary">
+                                        {{ doctor.direccion_actual }}
+                                    </div>
+                                </div>
+                                <hr>
+                                <div class="row">
+                                    <div class="col-sm-6">
+                                        <h6 class="mb-0">Departamento</h6>
+                                    </div>
+                                    <div class="col-sm-6 text-secondary">
+                                        {{ doctor.direccion_departamento }}
+                                    </div>
+                                </div>
+                                <hr>
+                                <div class="row">
+                                    <div class="col-sm-6">
+                                        <h6 class="mb-0">Operador</h6>
+                                    </div>
+                                    <div class="col-sm-6 text-secondary">
+                                        {{ doctor.operador }}
+                                    </div>
+                                </div>
+                                <hr>
+                                <div class="row">
+                                    <div class="col-sm-6">
+                                        <h6 class="mb-0">Universidd de Procedencia</h6>
+                                    </div>
+                                    <div class="col-sm-6 text-secondary">
+                                        {{ doctor.universidad_procedencia }}
+                                    </div>
+                                </div>
+                                <hr>
+                                <div class="row">
+                                    <div class="col-sm-6">
+                                        <h6 class="mb-0">Especialidad / Postgrado</h6>
+                                    </div>
+                                    <div class="col-sm-6 text-secondary">
+                                        {{ doctor.especialidad_postgrado }}
+                                    </div>
+                                </div>
+                                <hr>
+                                <div class="row">
+                                    <div class="col-sm-6">
+                                        <h6 class="mb-0">Dirección de Trabajo</h6>
+                                    </div>
+                                    <div class="col-sm-6 text-secondary">
+                                        {{ doctor.direccion_trabajo }}
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-4 mb-3">
+                        <div class="card mb-3">
+                            <div class="card-body">
+                                <div class="row">
+                                    <div class="col-sm-6">
+                                        <h6 class="mb-0">DNI</h6>
+                                    </div>
+                                    <div class="col-sm-6 text-secondary">
+                                        {{ doctor.dni }}
+                                    </div>
+                                </div>
+                                <hr>
+                                <div class="row">
+                                    <div class="col-sm-6">
+                                        <h6 class="mb-0">Apellidos</h6>
+                                    </div>
+                                    <div class="col-sm-6 text-secondary">
+                                        {{ doctor.apellidos }}
+                                    </div>
+                                </div>
+                                <hr>
+                                <div class="row">
+                                    <div class="col-sm-6">
+                                        <h6 class="mb-0">Provincia</h6>
+                                    </div>
+                                    <div class="col-sm-6 text-secondary">
+                                        {{ doctor.nacimiento_provincia }}
+                                    </div>
+                                </div>
+                                <hr>
+                                <div class="row">
+                                    <div class="col-sm-6">
+                                        <h6 class="mb-0">Nombre del Cónyuge</h6>
+                                    </div>
+                                    <div class="col-sm-6 text-secondary">
+                                        {{ doctor.nombre_conyuge }}
+                                    </div>
+                                </div>
+                                <hr>
+                                <div class="row">
+                                    <div class="col-sm-6">
+                                        <h6 class="mb-0">Distrito</h6>
+                                    </div>
+                                    <div class="col-sm-6 text-secondary">
+                                        {{ doctor.direccion_distrito }}
+                                    </div>
+                                </div>
+                                <hr>
+                                <div class="row">
+                                    <div class="col-sm-6">
+                                        <h6 class="mb-0">Teléfono Fijo</h6>
+                                    </div>
+                                    <div class="col-sm-6 text-secondary">
+                                        {{ doctor.telefono_fijo }}
+                                    </div>
+                                </div>
+                                <hr>
+                                <div class="row">
+                                    <div class="col-sm-6">
+                                        <h6 class="mb-0">Email (1)</h6>
+                                    </div>
+                                    <div class="col-sm-6 text-secondary">
+                                        {{ doctor.email_uno }}
+                                    </div>
+                                </div>
+                                <hr>
+                                <div class="row">
+                                    <div class="col-sm-6">
+                                        <h6 class="mb-0">Fecha de Egreso (Bachiller)</h6>
+                                    </div>
+                                    <div class="col-sm-6 text-secondary">
+                                        {{ doctor.fecha_egreso_bachiller }}
+                                    </div>
+                                </div>
+                                <hr>
+                                <div class="row">
+                                    <div class="col-sm-6">
+                                        <h6 class="mb-0">Área de Ejercicio</h6>
+                                    </div>
+                                    <div class="col-sm-6 text-secondary">
+                                        {{ doctor.area_ejercicio }}
+                                    </div>
+                                </div>
+                                <hr>
+                                <div class="row">
+                                    <div class="col-sm-6">
+                                        <h6 class="mb-0">Teléfono de Trabajo</h6>
+                                    </div>
+                                    <div class="col-sm-6 text-secondary">
+                                        {{ doctor.telefono_trabajo }}
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <hr>
+            <h1>Actividad</h1>
+            <hr>
+            <table class="table table-white table-bordered">
+                <thead class="justify-content-center">
+                <tr>
+                    <th scope="col">#</th>
+                    <th scope="col">Fecha</th>
+                    <th scope="col">Tipo</th>
+                    <th scope="col">Detalles</th>
+                    <th scope="col">Total (S/)</th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for pago in doctor.pagos.all %}
+                    <tr>
+                        <th>{{ forloop.counter }}</th>
+                        <td>{{ pago.get_fecha }}</td>
+                        {% if not pago.sale.es_cuota %}
+                            <td>CERTIFICADO</td>
+                            <td class="p-0">
+                                <table class="table table-primary">
+                                    <thead class="table table-secondary table-striped align-content-center table-bordered response">
+                                    <tr>
+                                        <th class="col-md-6">Certificado</th>
+                                        <th class="col-md-3">Cantidad</th>
+                                        <th class="col-md-3">Precio/U</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    {% for i in pago.sale.sale_detailSale.all %}
+                                        <tr>
+                                            <td>{{ i.certificate.nombre }}</td>
+                                            <td>{{ i.quantity }}</td>
+                                            <td>{{ i.price_unit }}</td>
+                                        </tr>
+                                    {% endfor %}
+                                    </tbody>
+                                </table>
+                            </td>
+                            <td><strong>{{ pago.sale.total }}</strong></td>
+                        {% else %}
+                            <td>CUOTA</td>
+                            <td class="p-0">
+                                <table class="table table-success">
+                                    <thead class="table table-secondary table-striped align-content-center table-bordered response">
+                                    <tr>
+                                        <th>Monto</th>
+                                        <th>N° Cuotas</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    <tr>
+                                        <td>{{ pago.monto }}</td>
+                                        <td>{{ pago.num_cuotas }}</td>
+                                    </tr>
+                                    </tbody>
+                                </table>
+                            </td>
+                            <td><strong>{{ pago.total }}</strong></td>
+                        {% endif %}
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+    </div>
+{% endblock content %}

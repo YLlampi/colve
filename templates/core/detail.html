@@ -1,0 +1,185 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+    <div class="container">
+        <div class="row flex-row">
+            <div class="col-md-5">
+                <h1>Registro de Actividades</h1>
+            </div>
+            <div class="col-md-7">
+                <form class="row" method="GET">
+                    {% csrf_token %}
+                    <div class="row col-md-4">
+                        <h6>Filtrar por tipo</h6>
+
+                        <select class="form-control" id="tipo" name="tipo">
+                            <option disabled selected value=""> Seleccione</option>
+                            <option value="C">Compra</option>
+                            <option value="V">Venta</option>
+                        </select>
+
+                    </div>
+
+                    <div class="row col-md-8">
+                        <h6>Buscar entre fecha</h6>
+                        <div class="row mx-1">
+                            <input class="form-control col-md-4" type="date" name="fecha1" id="fecha1">
+                            <input class="form-control col-md-4" type="date" name="fecha2" id="fecha2">
+                            <button class="form-control col-md-3 btn-success ml-1" type="submit">Consultar</button>
+                        </div>
+
+                    </div>
+                </form>
+            </div>
+
+        </div>
+        <hr>
+        <table class="table table-white table-bordered">
+            <thead class="justify-content-center">
+            <tr>
+                <th scope="col">#</th>
+                <th scope="col">Tipo</th>
+                <th scope="col">Fecha</th>
+                <th scope="col">Detalles</th>
+                <th scope="col">Cantidad</th>
+                <th scope="col">Método de Pago</th>
+                <th scope="col">Total (S/) = {{ total }}</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for sale in sales %}
+                <tr>
+                    {% if sale.tipo == 'C' %}
+
+                        <th scope="row">{{ forloop.counter }}</th>
+                        <td>COMPRA<br><strong>LIMA</strong></td>
+                        <td>{{ sale.get_fecha_venta }}</td>
+                        <td class="p-0">
+                            <table class="table table-danger">
+                                <thead class="table table-secondary table-striped align-content-center table-bordered response">
+                                <tr>
+                                    <td class="col-md-6">Certificado</td>
+                                    <td class="col-md-3">Cantidad</td>
+                                    <td class="col-md-3">Precio/U</td>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                {% for detail in sale.sale_detailBuy.all %}
+                                    <tr>
+                                        <td>{{ detail.certificate.nombre }}</td>
+                                        <td>{{ detail.quantity }}</td>
+                                        <td>{{ detail.price_unit }}</td>
+                                    </tr>
+                                {% endfor %}
+                                </tbody>
+                            </table>
+                        </td>
+                        <td>{{ sale.sale_detailBuy.count }}</td>
+                    {% elif sale.tipo == 'V' %}
+                        <tr>
+                        <th scope="row">{{ forloop.counter }}</th>
+                        <td>VENTA<br>
+                            <a href="{% url 'detail_doctor' sale.sale_pago.last.pago_doctor.last.id %}">
+                                <strong>{{ sale.sale_pago.last.pago_doctor.last.get_full_name }}</strong>
+                            </a>
+                        </td>
+                        <td>{{ sale.get_fecha_venta }}</td>
+
+                        {% if not sale.es_cuota %}
+                            <td class="p-0">
+                                <table class="table table-success">
+                                    <thead class="table table-secondary table-striped align-content-center table-bordered response">
+                                    <tr>
+                                        <td class="col-md-6">Certificado</td>
+                                        <td class="col-md-3">Cantidad</td>
+                                        <td class="col-md-3">Precio/U</td>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    {% for detail in sale.sale_detailSale.all %}
+                                        <tr>
+                                            <td>{{ detail.certificate.nombre }}</td>
+                                            <td>{{ detail.quantity }}</td>
+                                            <td>{{ detail.price_unit }}</td>
+                                        </tr>
+                                    {% endfor %}
+                                    </tbody>
+                                </table>
+                            </td>
+                            <td>{{ sale.sale_detailSale.count }}</td>
+                        {% else %}
+                            <td class="p-0">
+                                <table class="table table-success">
+                                    <thead class="table table-dark table-striped align-content-center table-bordered response">
+                                    <tr>
+                                        <td class="col-md-6">Cuota(s)</td>
+                                        <td class="col-md-3">Precio/U</td>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    {% for detail in sale.sale_pago.all %}
+                                        <tr>
+                                            <td>{{ detail.num_cuotas }}</td>
+                                            <td>{{ detail.monto }}</td>
+                                        </tr>
+                                    {% endfor %}
+                                    </tbody>
+                                </table>
+                            </td>
+                            <td>{{ sale.sale_pago.last.num_cuotas }}</td>
+                        {% endif %}
+
+                    {% endif %}
+                    <td><strong class="total-amount">{{ sale.metodo_pago.nombre }}</strong></td>
+                    <td><strong class="total-amount">{{ sale.total_sale }}</strong></td>
+                    </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+
+
+        <div class="pagination">
+            <span class="step-links">
+                {% if page_obj.has_previous %}
+                    <a href="?page=1">&laquo; Inicio</a>
+                    <a href="?page={{ page_obj.previous_page_number }}">anterior</a>
+                {% endif %}
+
+                <span class="current">
+                    Página {{ page_obj.number }} de {{ page_obj.paginator.num_pages }}.
+                </span>
+
+                {% if page_obj.has_next %}
+                    <a href="?page={{ page_obj.next_page_number }}">siguiente</a>
+                    <a href="?page={{ page_obj.paginator.num_pages }}">Último &raquo;</a>
+                {% endif %}
+            </span>
+        </div>
+    </div>
+
+{% endblock content %}
+
+{% block js %}
+    <script type="text/javascript">
+        window.onload = function () {
+            var fecha = new Date(); //Fecha actual
+            var mes = fecha.getMonth() + 1; //obteniendo mes
+            var dia = fecha.getDate(); //obteniendo dia
+            var ano = fecha.getFullYear(); //obteniendo año
+            if (dia < 10)
+                dia = '0' + dia; //agrega cero si el menor de 10
+            if (mes < 10)
+                mes = '0' + mes //agrega cero si el menor de 10
+            document.getElementById('fecha2').value = ano + "-" + mes + "-" + dia;
+        }
+
+        /*
+        $('#tipo').select2({
+            theme: 'bootstrap4',
+        });
+         */
+
+
+    </script>
+{% endblock js %}

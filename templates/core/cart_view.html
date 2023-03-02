@@ -1,0 +1,113 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <div class="container">
+        <h1 class="text-center">Caja</h1>
+        <hr>
+
+        <div class="row">
+            <h2 class="col">Total Venta: <strong>S/ {{ sale }}</strong></h2>
+            <h2 class="col">Total Compra: <strong>S/ {{ buy }}</strong></h2>
+        </div>
+        <hr>
+        <h2>Certificados</h2>
+        <table class="table table-white table-bordered">
+            <thead class="justify-content-center">
+            <tr>
+                <th scope="col">#</th>
+                <th scope="col">Certificado</th>
+                <th scope="col">Cantidad Comprada</th>
+                <th scope="col">Total Comprado (S/)</th>
+                <th scope="col">Cantidad Vendida</th>
+                <th scope="col" class="text-right">Total Vendido (S/)</th>
+            </tr>
+            </thead>
+            <tbody class="">
+            <tr>
+                <th>1</th>
+                <td>Certificado de Vacunación</td>
+                <td>{{ cant_buy_vac }}</td>
+                <td>{{ cant_total_buy_vac }}</td>
+                <td>{{ cant_sale_vac }}</td>
+                <td class="text-right">{{ cant_total_sale_vac }}</td>
+            </tr>
+            <tr>
+                <th>2</th>
+                <td>Certificado de Salud</td>
+                <td>{{ cant_buy_salud }}</td>
+                <td>{{ cant_total_buy_salud }}</td>
+                <td>{{ cant_sale_salud }}</td>
+                <td class="text-right">{{ cant_total_sale_salud }}</td>
+            </tr>
+            <tr>
+                <th>3</th>
+                <td>Certificado de Int. Quir.</td>
+                <td>{{ cant_buy_int }}</td>
+                <td>{{ cant_total_buy_int }}</td>
+                <td>{{ cant_sale_int }}</td>
+                <td class="text-right">{{ cant_total_sale_int }}</td>
+            </tr>
+            <tr>
+                <th>4</th>
+                <td>Certificado de Habilidad</td>
+                <td>{{ cant_buy_hab }}</td>
+                <td>{{ cant_total_buy_hab }}</td>
+                <td>{{ cant_sale_hab }}</td>
+                <td class="text-right">{{ cant_total_sale_hab }}</td>
+            </tr>
+            </tbody>
+        </table>
+        <hr>
+        <h2>Cuotas</h2>
+        <table class="table table-white table-bordered">
+            <thead class="justify-content-center">
+            <tr>
+                <th scope="col">#</th>
+                <th scope="col">Cuotas</th>
+                <th scope="col">Cantidad de Cuotas Pagadas</th>
+                <th scope="col" class="text-right">Total Pagado (S/)</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr>
+                <th>1</th>
+                <td>Cuotas</td>
+                <td>{{ cant_pagos }}</td>
+                <td class="text-right">{{ total_pagos }}</td>
+            </tr>
+
+            </tbody>
+        </table>
+        <hr>
+        <h2>Métodos de Pago</h2>
+        <table class="table table-white table-bordered">
+            <thead class="justify-content-center">
+            <tr>
+                <th scope="col">#</th>
+                <th scope="col">Método de Pago</th>
+                <th scope="col">Cantidad de Pagos(Compra)</th>
+                <th scope="col" class="">Total Compra</th>
+                <th scope="col">Cantidad de Pagos (Venta)</th>
+                <th scope="col" class="">Total Venta</th>
+            </tr>
+            </thead>
+            <tbody class="">
+            {% for pago in metodos_pago %}
+                <tr>
+                    <th>{{ forloop.counter }}</th>
+                    <td>{{ pago.nombre }}</td>
+                    <td>{{ pago.quantity_compra }}</td>
+                    <td class="">{{ pago.total_compra }}</td>
+                    <td>{{ pago.quantity_venta }}</td>
+                    <td class="">{{ pago.total_venta }}</td>
+                </tr>
+            {% endfor %}
+
+            </tbody>
+        </table>
+
+
+    </div>
+
+
+{% endblock content %}

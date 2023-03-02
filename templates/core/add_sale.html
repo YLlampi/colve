@@ -1,0 +1,349 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+    <div class="container">
+        {% if messages %}
+            <div class="alert alert-danger" role="alert">
+                {% for message in messages %}
+                    <p{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</p>
+                {% endfor %}
+            </div>
+        {% endif %}
+        <h1>VENTA DE CERTIFICADOS</h1>
+        <form id="sale-form" method="POST" class="was-validated">
+
+            {% csrf_token %}
+            <div class="card">
+                <div class="card-body">
+                    <table class="table table-sm" style="width: 100%">
+                        <tr>
+                            <td style="width: 20%">Doctor:</td>
+                            <td style="width: 20%">
+                                <select class="form-control" id="id_doctor" name="doctor"
+                                        required>
+                                    <option disabled selected value=""> Seleccione</option>
+                                    {% for doctor in doctores %}
+                                        {% if doctor.es_activo %}
+                                            <option value="{{ doctor.id }}">{{ doctor.nombres }}</option>
+                                        {% endif %}
+                                    {% endfor %}
+                                </select>
+                            </td>
+                            <td style="width: 20%">
+                                <button type="button" id="btn-detail" class="btn btn-primary btn-block pb-1"
+                                        data-toggle="modal"
+                                        data-target="#modal-updetail">Seleccionar Certificado(s)
+                                </button>
+
+                            </td>
+                            <td rowspan="3" class="align-middle text-center" style="width: 100%">
+                                <h2>REGISTRO DE VENTA</h2>
+                            </td>
+
+                        </tr>
+                        <tr>
+                            <td>Método de Pago:</td>
+                            <td>
+                                <select class="form-control" id="id_pago" name="pago" required>
+                                    <option disabled selected value=""> Seleccione</option>
+                                    {% for metodo in metodos_pago %}
+                                        <option value="{{ metodo.id }}">{{ metodo.nombre }}</option>
+                                    {% endfor %}
+                                </select>
+                            </td>
+                            <td>
+                                <button type="submit" id="btn-save"
+                                        class="btn btn-success btn-block pb-1">Vender
+                                </button>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Fecha venta:</td>
+                            <td><input type="date" class="form-control" id="id_fechaventa"
+                                       name="fechaventa"
+                                       placeholder="Fecha venta"
+                                       value="" required readonly>
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+        </form>
+
+
+        <div class="modal fade" id="modal-updetail" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle"
+             aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLongTitle">SELECCIONAR CERTIFICADO</h5>
+                        <button type="button" class="close" onclick="limper()" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body" id="modal-detail">
+                        <table class="table table-sm">
+                            <tr>
+                                <td>Certificado:</td>
+                                <td>
+                                    <select class="form-control" id="id_certificado" name="certificado" required>
+                                        <option disabled selected value=""> Seleccione</option>
+                                        {% for certificado in certificados %}
+                                            <option value="{{ certificado.id }}">{{ certificado.nombre }}
+                                                ({{ certificado.stock }})
+                                            </option>
+                                        {% endfor %}
+                                    </select>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>Cantidad:</td>
+                                <td>
+                                    <input type="text" class="form-control" id="id_cantidad"
+                                           name="cantidad"
+                                           placeholder="Cantidad" required
+                                           value="">
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>Precio Unitario:
+                                </td>
+                                <td>
+                                    <input type="text" class="form-control" id="id_preciounitario"
+                                           name="preciounitario"
+                                           placeholder="S/ 0.00" required
+                                           value="">
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" onclick="limper()" data-dismiss="modal">Salir
+                        </button>
+                        <button type="button" id="id_add" class="btn btn-primary">Agregar</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+        <table id="id_detail_data_grid"
+               class="table table-secondary table-striped align-content-center table-bordered response">
+            <thead>
+            <tr class="text-center text-white bg-primary" style="height: 40px">
+                <th scope="col" class="align-middle">#</th>
+                <th scope="col" class="align-middle">Tipo de Certificado</th>
+                <th scope="col" class="align-middle">Cantidad</th>
+                <th scope="col" class="align-middle">Precio Unitario</th>
+                <th scope="col" class="align-middle">Importe</th>
+                <th scope="col" class="align-middle">Eliminar</th>
+
+                <!--
+                <th scope="col" class="align-middle">Fecha de Compra</th>
+                <th scope="col" class="align-middle">Stock a la fecha</th>
+                <th scope="col" class="align-middle">Eliminar</th>-->
+            </tr>
+            </thead>
+            <tbody id="details">
+
+
+            </tbody>
+        </table>
+
+    </div>
+
+{% endblock content %}
+
+
+{% block js %}
+    <script type="text/javascript">
+
+        window.onload = function () {
+            var fecha = new Date(); //Fecha actual
+            var mes = fecha.getMonth() + 1; //obteniendo mes
+            var dia = fecha.getDate(); //obteniendo dia
+            var ano = fecha.getFullYear(); //obteniendo año
+            if (dia < 10)
+                dia = '0' + dia; //agrega cero si el menor de 10
+            if (mes < 10)
+                mes = '0' + mes //agrega cero si el menor de 10
+            document.getElementById('id_fechaventa').value = ano + "-" + mes + "-" + dia;
+        }
+
+
+        {#document.ready = document.getElementById("opciones").value = '0';#}
+        $('#id_doctor').select2({
+            theme: 'bootstrap4',
+        });
+        $('#id_certificado').select2({
+            theme: 'bootstrap4',
+        });
+        $('#id_pago').select2({
+            theme: 'bootstrap4',
+        });
+        $("#btn-new").click(function () {
+            limper_form();
+        });
+
+        function limper_form(request) {
+            $('#id_proveedor option').removeAttr('selected');
+            $('#id_proveedor option:first').attr('selected', 'selected');
+            $('#id_proveedor').trigger('change');
+        };
+
+        function limper(request) {
+            $('#id_cantidad').val('');
+            $('#id_preciounitario').val('');
+            $('#id_certificado option').removeAttr('selected');
+            $('#id_certificado option:first').attr('selected', 'selected');
+            $('#id_certificado').trigger('change');
+
+            {#$('#id_producto option[value=0]').attr('selected','selected');#}
+            {#$('#id_unidad option[value=0]').attr('selected','selected');#}
+        };
+        $("#id_add").click(function () {
+
+            let id_certificate = $('#id_certificado').val();
+            let name_certificate = $('#id_certificado option:selected').text();
+            let name_array = name_certificate.split(' ')
+
+            let stock = parseInt(name_array.at(-1).replace('(', '').replace(')', ''))
+            let quantity = parseFloat($('#id_cantidad').val());
+
+            if (stock < quantity) {
+                toastr.warning('STOCK NO DISPONIBLE.!');
+                return false;
+            }
+
+            let price_unit = parseFloat($('#id_preciounitario').val());
+            if (id_certificate > 0 && quantity > 0 && price_unit > 0) {
+                if ($("#id_detail_data_grid tr[certificate=" + id_certificate + "]").length) {
+                    toastr.warning('PRODUCTO YA SELECCIONADO, SELECCIONE OTRO.!');
+                    return false;
+                }
+                $('#id_detail_data_grid').append(
+                    '<tr certificate="' + id_certificate + '">' +
+                    '<td class="text-center">' + '</td>' +
+                    '<td>' + name_certificate + '</td>' +
+                    '<td class="item-quantity  text-center">' + quantity + '</td>' +
+                    '<td class="item-price text-center">' + price_unit.toFixed(2) + '</td>' +
+                    '<td class="text-center">' + (quantity * price_unit).toFixed(2) + '</td>' +
+                    '<td class="align-middle text-center"> ' + '<button type="button" onclick="deleteItem(' + id_certificate + ')" class="btn btn-danger delete-detail"><i class="fa fa-trash"></i></button>' + '</td>' +
+                    '</tr>'
+                );
+                //$index++;
+                limper()
+                counterStrike()
+                toastr.info('CERTIFICADO AGREGADO', '¡MENSAJE!');
+
+
+            } else {
+                {#toastr.succes('info messages');#}
+                toastr.warning('POR FAVOR, COMPLETE TODO LOS CAMPOS!');
+            }
+        });
+
+        $('#sale-form').submit(function (event) {
+            event.preventDefault();
+            if ($("#id_detail_data_grid tbody tr").length > 0) {
+                let Detail_sale = {
+                    "Details": [],
+                    "Doctor": $('#id_doctor').val(),
+                    "Date": $('#id_fechaventa').val(),
+                    "Pago": $('#id_pago').val(),
+                };
+                // Recorre cada detalle de producto (son 2 arrays) each -> recorre
+
+                $("#id_detail_data_grid tbody tr").each(function () {
+                    var detailObj = {
+                        "Certificate": $(this).attr('certificate'),
+                        "Quantity": $(this).find("td.item-quantity").text(),
+                        "Price": $(this).find("td.item-price").text(),
+                    };
+                    Detail_sale.Details.push(detailObj);
+
+                });
+
+                {#console.log(JSON.stringify(Detail_purchase));#}
+                {#alert('llego la hora de guardar.');#}
+
+                $.ajax({
+
+                    url: '/core/save_sale/',
+                    async: true,
+                    dataType: 'json', // for response
+                    type: 'GET',
+                    data: {'sale': JSON.stringify(Detail_sale)},
+                    contentType: 'application/json;charset=UTF-8',
+                    headers: {"X-CSRFToken": '{{ csrf_token }}'},
+                    success: function (response, textStatus, xhr) {
+                        if (xhr.status === 200) {
+                            toastr.success(response.message, '¡VENTA REGISTRADA CORRECTAMENTE!');
+
+                            let url = "/doctors/print_ticket_old/" + $('#id_doctor').val() + "/"
+                            window.location.href = url;
+
+                            setTimeout(() => {
+                                location.reload();
+                            }, 800);
+                        }
+                    },
+                    error: function (jqXhr, textStatus, xhr) {
+                        toastr.error("ERROR. ", '¡STOCK NO DISPONIBLE!');
+                    }
+                });
+
+            } else {
+                toastr.warning("PARA REALIZAR LA COMPRA NECESITA AGREGAR PRODUCTOS. ", '¡ADVERTENCIA!');
+            }
+        });
+
+        $('#id_producto').change(function () {
+            //recupera el id_dela opcion seleccionada
+            let _search = $(this).val();
+            //vacia el combo-borra opciones
+            $('#id_unidad').empty();
+
+            $.ajax({
+                url: '/buys/get_units_by_product/',
+                async: true,
+                dataType: 'json',
+                type: 'GET',
+                //mando  id del producto del combo
+                data: {'ip': _search},
+                // si va bien retorna la data
+                success: function (response) {
+                    //le da formato array
+                    let units = JSON.parse(response['units']);
+                    units.forEach(
+                        element =>
+                            $('#id_unidad').append(
+                                '<option value="' + element['pk'] + '">' + element['fields']['name'] + '</option>')
+                    )
+                },
+
+            });
+
+        });
+
+        //Bonton eliminar fila
+        function deleteItem($id) {
+            $('#details').find("tr[certificate=" + $id + "]").remove();
+            counterStrike();
+        }
+
+        // reasigna numero de fila a los detalles
+        function counterStrike() {
+            let l = 1;
+            $('#details tr').each(function () {
+                $(this).attr('i', l);
+                $(this).children('td:nth-child(1)').text(l);
+                l++;
+            });
+
+        }
+
+
+    </script>
+{% endblock js %}

@@ -1,0 +1,240 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+    <div class="container">
+
+        {% if messages %}
+            <div class="alert alert-danger" role="alert">
+                {% for message in messages %}
+                    <p{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</p>
+                {% endfor %}
+            </div>
+        {% endif %}
+
+
+        <div class="row gutters-sm">
+            <div class="col-md-6">
+                <div class="card mb-3">
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-sm-4">
+                                <h6 class="mb-0">Médico</h6>
+                            </div>
+                            <div class="col-sm-8 text-secondary">
+                                {{ doctor.get_full_name }}
+                            </div>
+                        </div>
+                        <hr>
+                        <div class="row">
+                            <div class="col-sm-4">
+                                <h6 class="mb-0">N° de CMVP</h6>
+                            </div>
+                            <div class="col-sm-8 text-secondary">
+                                {{ doctor.num_CMVP }}
+                            </div>
+                        </div>
+                        <hr>
+                        <div class="row">
+                            <div class="col-sm-4">
+                                <h6 class="mb-0">Fecha de Registro</h6>
+                            </div>
+                            <div class="col-sm-8 text-secondary">
+                                {{ doctor.get_fecha_registro }}
+                            </div>
+                        </div>
+                        <hr>
+                        <div class="row">
+                            <div class="col-sm-4">
+                                <h6 class="mb-0">Fecha de Emisión</h6>
+                            </div>
+                            <div class="col-sm-8 text-secondary">
+                                {{ doctor.get_fecha_emision }}
+                            </div>
+                        </div>
+                        <hr>
+                        <div class="row">
+                            <div class="col-sm-4">
+                                <h6 class="mb-0">Fecha de Caducidad</h6>
+                            </div>
+                            <div class="col-sm-8 text-secondary">
+                                {{ doctor.get_fecha_caducidad }}
+                            </div>
+                        </div>
+                        <hr>
+                        <div class="row">
+                            <div class="col-sm-4">
+                                <h6 class="mb-0">¿Activo?</h6>
+                            </div>
+                            <div class="col-sm-8 text-secondary">
+                                {{ doctor.get_es_activo }}
+                            </div>
+                        </div>
+                        <hr>
+                        <div class="row">
+                            <div class="col-sm-4">
+                                <h6 class="mb-0">Última Fecha de Pago</h6>
+                            </div>
+                            <div class="col-sm-8 text-secondary">
+                                {{ doctor.get_fecha_ultimo_pago }}
+                            </div>
+                        </div>
+                        <hr>
+                        <div class="row p-3 mb-2 bg-warning text-dark">
+                            <div class="col-sm-4">
+                                <h6 class="mb-0">Activo Hasta</h6>
+                            </div>
+                            <div class="col-sm-8 text-secondary">
+                                {{ doctor.get_fecha_activo_mes }}
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-6">
+                <h1>Pagar cuota</h1>
+
+                <div class="card mb-3">
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-sm-6">
+                                <h6 class="mb-0">Ultima Cuota Pagada</h6>
+                            </div>
+                            <div class="col-sm-6 text-secondary">
+                                {{ doctor.get_fecha_pagado_mes }}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+
+                <form method="POST" class="form-inline justify-content-center" id="form-data">
+                    {% csrf_token %}
+                    <div class="row">
+                        <div class="col-md-4 text-center">
+                            <label for="num_cuotas" class="form-label">Número de Cuotas</label>
+                            <input class="form-control " type="text" id="num_cuotas" name="num_cuotas"
+                                   placeholder="1">
+                        </div>
+                        <div class="col-md-4 text-center">
+                            <label for="monto" class="form-label">Precio de Cuota</label>
+                            <input class="form-control" type="text" id="monto" name="monto"
+                                   placeholder="S/">
+                        </div>
+                        <div class="col-md-4 text-center">
+                            <label>Método de Pago:</label>
+                            <select class="form-control" id="id_pago" name="pago" required>
+                                <option disabled selected value=""> Seleccione</option>
+                                {% for metodo in metodos_pago %}
+                                    <option value="{{ metodo.id }}">{{ metodo.nombre }}</option>
+                                {% endfor %}
+                            </select>
+
+                        </div>
+                    </div>
+                    <div class="col-md-12 mt-2 text-center">
+                        <button class="btn btn-outline-success my-sm-0 col-md-10" id="btn-pay" type="button">Ver
+                            Resumen
+                        </button>
+                    </div>
+                    <input id="pk" name="pk" value="{{ doctor.id }}" hidden>
+
+
+                    <div class="col-md-12 card mb-3 mt-4" hidden id="pay">
+                        <div class="card-body">
+                            <div class="row text-center">
+                                <div class="col-sm-4">
+                                    <h6 class="mb-0">N° de Cuotas</h6>
+                                </div>
+                                <div class="col-sm-4">
+                                    <h6 class="mb-0">Precio / Cuota</h6>
+                                </div>
+                                <div class="col-sm-4">
+                                    <h6 class="mb-0">Total a Pagar</h6>
+                                </div>
+                            </div>
+                            <hr>
+                            <div class="row text-center">
+                                <div class="col-sm-4 text-secondary">
+                                    <label id="n_cuotas"></label>
+                                </div>
+                                <div class="col-sm-4 text-secondary">
+                                    <label id="precio_cuota"></label>
+                                </div>
+                                <div class="col-sm-4 text-secondary">
+                                    <label id="total_pago"></label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-12 mt-2 text-center" id="button-pay" hidden>
+                        <button class="btn btn-outline-danger my-sm-0 col-md-10" id="btn2-pay" type="submit">
+                            Pagar Ahora
+                        </button>
+                    </div>
+
+                </form>
+
+            </div>
+        </div>
+    </div>
+
+
+{% endblock content %}
+
+{% block js %}
+    <script type="text/javascript">
+
+        $('#id_pago').select2({
+            theme: 'bootstrap4',
+        });
+
+        document.getElementById("btn-pay").addEventListener("click", displayDate);
+
+        function displayDate() {
+            const monto = document.getElementById("monto").value.replace(',', '.')
+            const num_cuotas = document.getElementById("num_cuotas").value
+            let total = monto * num_cuotas
+
+            if (monto && num_cuotas) {
+                document.getElementById("pay").removeAttribute("hidden");
+                document.getElementById("button-pay").removeAttribute("hidden");
+
+                document.getElementById("n_cuotas").innerHTML = num_cuotas
+                document.getElementById("precio_cuota").innerHTML = 'S/ ' + parseFloat(monto).toFixed(2)
+                document.getElementById("total_pago").innerHTML = 'S/ ' + parseFloat(total).toFixed(2)
+            }
+        }
+
+        $('#form-data').submit(function (event) {
+            event.preventDefault();
+            let data = new FormData($('#form-data').get(0));
+
+            $.ajax({
+                url: '/doctors/pay_doctor/',
+                type: 'POST',
+                data: data,
+                cache: false,
+                processData: false,
+                contentType: false,
+                headers: {"X-CSRFToken": '{{ csrf_token }}'},
+                success: function (response) {
+
+                    let url = "/doctors/print_ticket_old/" + response.pk + "/"
+                    let url2 = '/doctors/detail_doctor/' + response.pk + "/"
+                    window.location.href = url;
+                    setTimeout(() => {
+                        location.replace(url2)
+                    }, 1000)
+                },
+                error: function (response) {
+                    console.log('Ocurrio un problema al registrar');
+                }
+            });
+        });
+
+    </script>
+{% endblock js %}

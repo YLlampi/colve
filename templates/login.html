@@ -1,0 +1,119 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Login</title>
+
+    <!-- Google Font: Source Sans Pro -->
+    <link rel="stylesheet"
+          href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
+    <!-- Font Awesome -->
+    <link href="{% static 'plugins/fontawesome-free/css/all.min.css' %}" rel="stylesheet"/>
+    <!-- icheck bootstrap -->
+    <link href="{% static 'plugins/icheck-bootstrap/icheck-bootstrap.min.css' %}" rel="stylesheet"/>
+    <link rel="stylesheet" href="{% static 'fonts/bankgothick/font-bankgothick.css' %}">
+    <link rel="stylesheet" href="{% static 'assets/css/stylazos.css' %}">
+    <!-- Theme style -->
+    <link href="{% static 'assets/css/adminlte.min.css' %}" rel="stylesheet"/>
+
+    <link rel="icon" type="image/x-icon" href="{% static 'assets/img/logo-vet.png' %}">
+</head>
+<body class="hold-transition login-page bg-secondary">
+<div class="login-box">
+    <!-- /.login-logo -->
+    <div class="card card-outline card-danger">
+        <div class="card-header text-center">
+            {#      <img class="animation__shake" src="{% static 'assets/img/LOGO.png' %}" alt="Logo" height="60"#}
+            {#             width="60">#}
+            <div class="card m-2">
+                <img src="{% static 'assets/img/logo-vet-bg.png' %}" alt="logo" class="img-fluid ml-2" width="300">
+            </div>
+            {#        <p class="roboto-condensed-regular text-secondary font-weight-bold h4">RUC 20456162585</p>#}
+            <p class="text-danger text-uppercase h3 mb-0 font-lazo">COLVET 1.0</p>
+        </div>
+        <div class="card-body pt-1">
+            <p class="login-box-msg roboto-condensed-regular text-dark font-italic">Inicie sesión</p>
+
+            <form method="post">
+                {% csrf_token %}
+                <div class="input-group mb-3">
+                    {{ form.username }}
+                    <div class="input-group-append">
+                        <div class="input-group-text">
+                            <span class="fas fa-envelope"></span>
+                        </div>
+                    </div>
+                </div>
+                <div class="input-group mb-3">
+                    {{ form.password }}
+                    <div class="input-group-append">
+                        <div class="input-group-text">
+                            <span class="fas fa-lock"></span>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-8">
+                        <div class="icheck-primary">
+                            <input type="checkbox" id="remember">
+                            <label for="remember" class="text-dark font-weight-normal" style="font-size: 14px">
+                                Recordar
+                            </label>
+                        </div>
+                    </div>
+                    <!-- /.col -->
+                    <div class="col-4">
+                        <button type="submit" class="btn btn-primary btn-block">Ingresar</button>
+                    </div>
+                    <!-- /.col -->
+                </div>
+            </form>
+            {% comment %}
+
+            <div class="social-auth-links text-center mt-2 mb-3">
+                <a href="#" class="btn btn-block btn-danger">
+                    <i class="fas fa-unlock-alt"></i> Olvide mi contraseña
+                </a>
+            </div>
+
+            <div class="text-center">
+                <div class="spinner-border text-danger" role="status">
+              <span class="sr-only">Loading...</span>
+            </div>
+            </div>
+            {% endcomment %}
+
+
+            {#      <div class="social-auth-links text-center mt-2 mb-3">#}
+            {#        <a href="#" class="btn btn-block btn-primary">#}
+            {#          <i class="fab fa-facebook mr-2"></i> Sign in using Facebook#}
+            {#        </a>#}
+            {#        <a href="#" class="btn btn-block btn-danger">#}
+            {#          <i class="fab fa-google-plus mr-2"></i> Sign in using Google+#}
+            {#        </a>#}
+            {#      </div>#}
+            <!-- /.social-auth-links -->
+
+            {#      <p class="mb-1">#}
+            {#        <a href="forgot-password.html">Olvide mi contraseña</a>#}
+            {#      </p>#}
+            {#      <p class="mb-0">#}
+            {#        <a href="register.html" class="text-center">Register a new membership</a>#}
+            {#      </p>#}
+        </div>
+        <!-- /.card-body -->
+    </div>
+    <!-- /.card -->
+</div>
+<!-- /.login-box -->
+
+<!-- jQuery -->
+<script src="{% static 'plugins/jquery/jquery.min.js' %}"></script>
+<!-- Bootstrap 4 -->
+<script src="{% static 'plugins/bootstrap/js/bootstrap.bundle.min.js' %}"></script>
+<!-- AdminLTE App -->
+<script src="{% static 'assets/js/adminlte.min.js' %}"></script>
+</body>
+</html>

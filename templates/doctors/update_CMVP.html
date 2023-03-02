@@ -1,0 +1,40 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <div class="container">
+        <h1>DATOS CMVP</h1>
+        <hr>
+        <form method="POST" class="row g-3" enctype="multipart/form-data">
+            {% csrf_token %}
+            
+            <div class="col-md-4">
+                <label for="inputEmail4" class="form-label">Número de CMVP</label>
+                {{ form.num_CMVP }}
+                {% for error in form.num_CMVP.errors %}
+                    <div class="p-1 mb-2 bg-danger text-white">{{ error }}</div>
+                {% endfor %}
+            </div>
+            <div class="col-md-4">
+                <label for="inputEmail4" class="form-label">Fecha de Registro</label>
+                {{ form.fecha_registro }}
+            </div>
+            <div class="col-md-4">
+                <label for="inputEmail4" class="form-label">Fecha de Emision</label>
+                {{ form.fecha_emision }}
+            </div>
+
+            <hr>
+
+            <div class="col-md-4">
+                <label for="inputEmail4" class="form-label">Ultimo Cuota Pagada</label>
+                {{ form.fecha_mes }}
+            </div>
+
+            <div class="col-md-12 mt-2">
+                <button type="submit" class="btn btn-primary btn-sm">Enviar</button>
+            </div>
+        </form>
+    </div>
+
+
+{% endblock content %}
