@@ -4,17 +4,57 @@
 <!-- html -->
 {% block content %}
     <div class="container">
-        
-
-
-
-
+        <table id="id_detail_data_grid"
+                class="table table-secondary table-striped align-content-center table-bordered response">
+            <thead>
+            <tr class="text-center text-white bg-primary" style="height: 40px">
+                <th scope="col" class="align-middle">#</th>
+                <th scope="col" class="align-middle">Tipo de Certificado</th>
+                <th scope="col" class="align-middle">Cantidad</th>
+                <th scope="col" class="align-middle">Precio Unitario</th>
+                <th scope="col" class="align-middle">Importe</th>
+                <th scope="col" class="align-middle">Eliminar</th>
+            </tr>
+            </thead>
+            <tbody id="details">
+            </tbody>
+        </table>
     </div>
 
 {% endblock content %}
 
 {% block js %}
     <script type="text/javascript">
+        let tbody=document.getElementById('details')
+        const local = JSON.parse(localStorage.getItem('cart_Items'))
+        console.log('xd :v :',local)
+        local.forEach((item)=>{tbody.innerHTML+=`
+    <tr>
+        <td>${item.id_certidicado}</td>
+        <td>${item.nombre_certificado}</td>
+        <td>${item.cantidad}</td>
+        <td>${item.precio_unitario}</td>
+        <td>${item.precio_total}</td>
+        <td><button type="button" class="btn btn-danger delete-detail">Eliminar</button></td>
+    </tr>`
+
+        })
+
+
+/*
+$('#id_detail_data_grid').append(
+    '<tr certificate="' + id_certificate + '">' +
+    '<td class="text-center">' + '</td>' +
+    '<td>' + name_certificate + '</td>' +
+    '<td class="item-quantity  text-center">' + quantity + '</td>' +
+    '<td class="item-price text-center">' + price_unit.toFixed(2) + '</td>' +
+    '<td class="text-center">' + (quantity * price_unit).toFixed(2) + '</td>' +
+    '<td class="align-middle text-center"> ' + '<button type="button" onclick="deleteItem(' + id_certificate + ')" class="btn btn-danger delete-detail"><i class="fa fa-trash"></i></button>' + '</td>' +
+    '</tr>'
+*/
+
 
     </script>
+
+
 {% endblock js %}

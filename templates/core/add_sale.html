@@ -121,7 +121,7 @@
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" onclick="limper()" data-dismiss="modal">Salir
                         </button>
-                        <button type="button" id="id_add" class="btn btn-primary">Agregar</button>
+                        <button type="button" id="id_add" class="btn btn-primary" >Agregar</button>
                     </div>
                 </div>
             </div>
@@ -233,6 +233,7 @@
                     '</tr>'
                 );
                 //$index++;
+                addItemToLocalStorage();
                 limper()
                 counterStrike()
                 toastr.info('CERTIFICADO AGREGADO', '¡MENSAJE!');
@@ -341,6 +342,45 @@
                 $(this).children('td:nth-child(1)').text(l);
                 l++;
             });
+
+        }
+
+        //agregar al localStorage
+        const addItemToLocalStorage = () => {
+            let input_doctor=document.getElementById('id_doctor');
+            let input_fecha=document.getElementById('id_fechaventa');
+            let input_certificado=document.getElementById('id_certificado');
+            let input_cantidad=document.getElementById('id_cantidad');
+            let input_preciounitario=document.getElementById('id_preciounitario');
+
+            let id_doctor=input_doctor.value;
+            let fecha_compra=input_fecha.value;
+            let id_certidicado=input_certificado.value;
+            let cantidad=input_cantidad.value;
+            let precio_unitario=input_preciounitario.value
+            let precio_total=cantidad*precio_unitario
+            let nombre_certificado=$('#id_certificado option:selected').text();
+
+            const item = {
+                id_doctor,
+                fecha_compra,
+                id_certidicado,
+                cantidad,
+                precio_unitario,
+                precio_total,
+                nombre_certificado
+            }
+            const items_local=JSON.parse(window.localStorage.getItem('cart_Items'))
+            var array=[]
+            if( !!items_local && items_local.length > 0){
+                array=[...items_local,item]
+            }
+            else{
+                array.push(item)
+            }
+            const newCart = JSON.stringify(array)
+            window.localStorage.setItem('cart_Items',newCart)
+
 
         }
 
